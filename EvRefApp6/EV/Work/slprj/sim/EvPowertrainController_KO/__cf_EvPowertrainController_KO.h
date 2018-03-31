@@ -1,0 +1,3 @@
+#ifndef CF_EvPowertrainController_KO_H__
+#define CF_EvPowertrainController_KO_H__
+#endif
