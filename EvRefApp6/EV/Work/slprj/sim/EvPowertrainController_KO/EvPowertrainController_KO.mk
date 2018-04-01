@@ -88,7 +88,7 @@ ALT_MATLAB_ROOT         = C:\PROGRA~1\MATLAB\R2017b
 MATLAB_BIN              = C:\Program Files\MATLAB\R2017b\bin
 ALT_MATLAB_BIN          = C:\PROGRA~1\MATLAB\R2017b\bin
 MASTER_ANCHOR_DIR       = 
-START_DIR               = C:\Users\Michael\Documents\UWAFT\Competition\EvRefApp6\EV\Work
+START_DIR               = C:\Users\Michael\Documents\UWAFT\RFP-CSMS\EvRefApp6\EV\Work
 S_FUNCTIONS             = 
 S_FUNCTIONS_LIB         = 
 NUMST                   = 1
@@ -183,7 +183,7 @@ MATLAB_INCLUDES = $(MATLAB_INCLUDES);$(MATLAB_ROOT)\rtw\c\src\ext_mode\common
 MATLAB_INCLUDES = $(MATLAB_INCLUDES);$(START_DIR)
 MATLAB_INCLUDES = $(MATLAB_INCLUDES);$(MATLAB_ROOT)\simulink\include\sf_runtime
 MATLAB_INCLUDES = $(MATLAB_INCLUDES);$(START_DIR)\slprj\sim\EvPowertrainController_KO
-MATLAB_INCLUDES = $(MATLAB_INCLUDES);C:\Users\Michael\Documents\UWAFT\Competition\EvRefApp6\EV\Controller\Powertrain
+MATLAB_INCLUDES = $(MATLAB_INCLUDES);C:\Users\Michael\Documents\UWAFT\RFP-CSMS\EvRefApp6\EV\Controller\Powertrain
 
 INCLUDE = .;$(RELATIVE_PATH_TO_ANCHOR);$(MATLAB_INCLUDES);$(INCLUDE)
 

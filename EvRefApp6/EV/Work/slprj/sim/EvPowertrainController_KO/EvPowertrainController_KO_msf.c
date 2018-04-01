@@ -15,7 +15,7 @@
 #include "EvPowertrainController_KO.h"
 #include "EvPowertrainController_KO_private.h"
 MdlRefChildMdlRec childModels [ 1 ] = { "EvPowertrainController_KO" ,
-"EvPowertrainController_KO" , 0 } ; const char *
+"EvPowertrainController_KO" , 0 } ; real_T rtP_RegenEna = 0.0 ; const char *
 rt_GetMatSignalLoggingFileName ( void ) { return NULL ; } const char *
 rt_GetMatSigLogSelectorFileName ( void ) { return NULL ; } void *
 rt_GetOSigstreamManager ( void ) { return NULL ; } void * rt_slioCatalogue (
@@ -26,7 +26,10 @@ rt_RAccelReplaceToFilename ( const char * blockpath , char * fileName ) { (
 void ) blockpath ; ( void ) fileName ; }
 #define MDL_PROCESS_PARAMETERS
 #if defined(MATLAB_MEX_FILE)
-static void mdlProcessParameters ( SimStruct * S ) { }
+static void mdlProcessParameters ( SimStruct * S ) { real_T * GlobalPrm_0 = (
+real_T * ) NULL ; if ( ! ssGetModelRefGlobalParamData ( S , 0 , ( void * * )
+( & GlobalPrm_0 ) ) ) return ; ( void ) memcpy ( & ( rtP_RegenEna ) ,
+GlobalPrm_0 , sizeof ( real_T ) ) ; }
 #endif
 static void mdlPeriodicOutputUpdate ( SimStruct * S , int_T tid ) {
 kgvwgi1unho * dw = ( kgvwgi1unho * ) ssGetDWork ( S , 0 ) ; const real_T *
@@ -73,8 +76,12 @@ return ; if ( ! ( fcn ) ( S , GEN_FCN_CHK_MODELREF_FIXED_STEP , 0 , &
 fixedStep ) ) return ; ( fcn ) ( S ,
 GEN_FCN_CHK_MODELREF_FRAME_UPGRADE_DIAGNOSTICS , 2 , ( NULL ) ) ; }
 slmrSetModelRefMaxFreqHz ( S , - 1.000000 ) ;
-slmrSetModelRefAutoSolverStatusFlags ( S , 323 ) ; ssSetRTWGeneratedSFcn ( S
-, 2 ) ; ssSetNumContStates ( S , 0 ) ; ssSetNumDiscStates ( S , 0 ) ; { const
+slmrSetModelRefAutoSolverStatusFlags ( S , 323 ) ; { static const char *
+globalVarList [ ] = { "RegenEna" } ; ssRegModelRefGlobalVarUsage ( S , 1 , (
+void * ) globalVarList ) ; } if ( ! ssSetNumModelRefGlobalParams ( S , 1 ) )
+return ; { int_T locDims [ 2 ] = { 1 , 1 } ; ssRegModelRefGlobalParam ( S , 0
+, "RegenEna" , 2 , locDims , 0 , SS_DOUBLE ) ; } ssSetRTWGeneratedSFcn ( S ,
+2 ) ; ssSetNumContStates ( S , 0 ) ; ssSetNumDiscStates ( S , 0 ) ; { const
 char * modelNames [ ] = { "" } ; const size_t numModelNames = 0 ;
 slmrSetHasNonBuiltinLoggedState ( S , numModelNames , modelNames ) ; }
 ssSetSymbolicDimsSupport ( S , true ) ; slmrInitializeIOPortDataVectors ( S ,
@@ -323,23 +330,23 @@ ssSetModelMappingInfoPtr ( S , & ( dw -> rtm . DataMapInfo . mmi ) ) ; if ( S
 genericFcn ; } }
 #define MDL_START
 static void mdlStart ( SimStruct * S ) { kgvwgi1unho * dw = ( kgvwgi1unho * )
-ssGetDWork ( S , 0 ) ; o5rnvcjh22 ( & ( dw -> rtm ) , & ( dw -> rtdw ) ) ; }
-static void mdlOutputs ( SimStruct * S , int_T tid ) { kgvwgi1unho * dw = (
-kgvwgi1unho * ) ssGetDWork ( S , 0 ) ; const real_T * i_ed3otjsyfy = ( real_T
-* ) ssGetInputPortSignal ( S , 0 ) ; const real_T * i_bbsneu0cut = ( real_T *
-) ssGetInputPortSignal ( S , 1 ) ; const real_T * i_czwmzmsusr = ( real_T * )
-ssGetInputPortSignal ( S , 2 ) ; const real_T * i_d3lvjen45n = ( real_T * )
-ssGetInputPortSignal ( S , 3 ) ; const real_T * i_cvuxmjcucq = ( real_T * )
-ssGetInputPortSignal ( S , 6 ) ; real_T * o_B_10_1 = ( real_T * )
-ssGetOutputPortSignal ( S , 0 ) ; real_T * o_B_10_2 = ( real_T * )
-ssGetOutputPortSignal ( S , 1 ) ; if ( tid == PARAMETER_TUNING_TID ) {
-EvPowertrainController_KOTID1 ( & ( dw -> rtb ) ) ; } if ( tid !=
-CONSTANT_TID && tid != PARAMETER_TUNING_TID ) { EvPowertrainController_KO ( &
-( dw -> rtm ) , i_ed3otjsyfy , i_bbsneu0cut , i_czwmzmsusr , i_d3lvjen45n ,
-i_cvuxmjcucq , o_B_10_1 , o_B_10_2 , & ( dw -> rtb ) , & ( dw -> rtdw ) ) ; }
-} static void mdlTerminate ( SimStruct * S ) { kgvwgi1unho * dw = (
-kgvwgi1unho * ) ssGetDWork ( S , 0 ) ; dafdmkvcgk ( & ( dw -> rtm ) , & ( dw
--> rtdw ) ) ; return ; }
+ssGetDWork ( S , 0 ) ; mdlProcessParameters ( S ) ; o5rnvcjh22 ( & ( dw ->
+rtm ) , & ( dw -> rtdw ) ) ; } static void mdlOutputs ( SimStruct * S , int_T
+tid ) { kgvwgi1unho * dw = ( kgvwgi1unho * ) ssGetDWork ( S , 0 ) ; const
+real_T * i_ed3otjsyfy = ( real_T * ) ssGetInputPortSignal ( S , 0 ) ; const
+real_T * i_bbsneu0cut = ( real_T * ) ssGetInputPortSignal ( S , 1 ) ; const
+real_T * i_czwmzmsusr = ( real_T * ) ssGetInputPortSignal ( S , 2 ) ; const
+real_T * i_d3lvjen45n = ( real_T * ) ssGetInputPortSignal ( S , 3 ) ; const
+real_T * i_cvuxmjcucq = ( real_T * ) ssGetInputPortSignal ( S , 6 ) ; real_T
+* o_B_10_1 = ( real_T * ) ssGetOutputPortSignal ( S , 0 ) ; real_T * o_B_10_2
+= ( real_T * ) ssGetOutputPortSignal ( S , 1 ) ; if ( tid ==
+PARAMETER_TUNING_TID ) { EvPowertrainController_KOTID1 ( & ( dw -> rtb ) ) ;
+} if ( tid != CONSTANT_TID && tid != PARAMETER_TUNING_TID ) {
+EvPowertrainController_KO ( & ( dw -> rtm ) , i_ed3otjsyfy , i_bbsneu0cut ,
+i_czwmzmsusr , i_d3lvjen45n , i_cvuxmjcucq , o_B_10_1 , o_B_10_2 , & ( dw ->
+rtb ) , & ( dw -> rtdw ) ) ; } } static void mdlTerminate ( SimStruct * S ) {
+kgvwgi1unho * dw = ( kgvwgi1unho * ) ssGetDWork ( S , 0 ) ; dafdmkvcgk ( & (
+dw -> rtm ) , & ( dw -> rtdw ) ) ; return ; }
 #define MDL_CLEANUP_RUNTIME_RESOURCES
 static void mdlCleanupRuntimeResources ( SimStruct * S ) { }
 #if !defined(MDL_SIM_STATE)
