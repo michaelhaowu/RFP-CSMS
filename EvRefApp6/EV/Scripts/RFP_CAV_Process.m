@@ -16,16 +16,17 @@ ACC_Kd = 0.05;
 ACC_Nf = 10;
 ACC_Tgap_s = 2;
 ACC_Dgap_m = 15;
-Tgap_s = 10;
+Kp = 30;
+Kp_step = 0.005;
 CarL = 7;
 
 %Set save parameters
 BattConsp_WhPMi = [];
 AveMotEff = [];
 EnrgLossTotal_Wh = [];
-BattConspACC_WhPMi = zeros(Tgap_s,CarL);
-AveMotEffACC = zeros(Tgap_s,CarL);
-EnrgLossTotalACC_Wh = zeros(Tgap_s,CarL);
+BattConspACC_WhPMi = zeros(Kp,CarL);
+AveMotEffACC = zeros(Kp,CarL);
+EnrgLossTotalACC_Wh = zeros(Kp,CarL);
 
 %Compute consumptions numbers
 ess_mdl_wrks = get_param(battev_hdl,'ModelWorkspace') ;
@@ -121,7 +122,8 @@ hold on
 ind = ind+1;
 %ACC Optimization
 UseAdaptiveCruiseControl_bool = 1;
-for ACC_Tgap_s = 1:Tgap_s
+for ACC_Kp_i = 1:Kp
+    ACC_Kp = ACC_Kp_i*Kp_step;
     for ACC_Dgap_CarL = 1:CarL
         ACC_Dgap_m = ACC_Dgap_CarL * 5;
 
@@ -178,12 +180,12 @@ for ACC_Tgap_s = 1:Tgap_s
         PwrLoss_W = logsout{8}.Values.PwrLoss.get('data');
         EnrgLoss_Wh = logsout{8}.Values.EngLossWhr.get('data');
 
-        BattConspACC_WhPMi(ACC_Tgap_s, ACC_Dgap_CarL) = BattConsp_Whr./ VehDisTotal_Mi;
-        AveMotEffACC(ACC_Tgap_s, ACC_Dgap_CarL) = mean(MotEff_Pct);
-        EnrgLossTotalACC_Wh(ACC_Tgap_s, ACC_Dgap_CarL) = EnrgLoss_Wh(end);
+        BattConspACC_WhPMi(ACC_Kp_i, ACC_Dgap_CarL) = BattConsp_Whr./ VehDisTotal_Mi;
+        AveMotEffACC(ACC_Kp_i, ACC_Dgap_CarL) =     mean(MotEff_Pct);
+        EnrgLossTotalACC_Wh(ACC_Kp_i, ACC_Dgap_CarL) = EnrgLoss_Wh(end);
 
         % Plot motor losses
-        if (ACC_Dgap_CarL == 3 && ACC_Tgap_s == 2) || (ACC_Dgap_CarL == 5 && ACC_Tgap_s == 5)
+        if (ACC_Dgap_CarL == 3 && ACC_Kp_i == 10) || (ACC_Kp_i == 8 && ACC_Dgap_CarL == 5)
             figure(1);
             subplot(3,1,1);
             plot(time,MotPwr_W)
@@ -208,8 +210,8 @@ for ACC_Tgap_s = 1:Tgap_s
     end
 end
 
-% %% Plots
-% % Plot motor eff zones
+%% Plots
+% Plot motor eff zones
 % fig2 = figure(2);
 % cmap1 = colormap; 
 % cmap1 = flipud(cmap1);
@@ -224,18 +226,23 @@ end
 % MotEff_Pct_plot(MotEff_Pct_plot<=80) = 80;
 % scatter(MotTrq_RadPS, MotTrq_Nm, size, MotEff_Pct_plot);
 % colorbar
-
+% xlabel('Motor Speed (RPM)');
+% ylabel('Motor Torque (Nm)');
 
 % Plot motor losses
 figure(1);
 subplot(3,1,1);
-legend('MotPwr Driver (W)', 'MotPwr ACC (W)', 'MotPwr ACC Mod(W)')
+legend('Driver ', 'ACC', 'ACC Mod')
+ylabel('Motor Power (W)');
 
 subplot(3,1,2);
-legend('PwrLoss Driver(W)', 'PwrLoss ACC (W)', 'PwrLoss ACC Mod (W)')
+legend('Driver ', 'ACC', 'ACC Mod')
+ylabel('Power Loss (W)');
 
 subplot(3,1,3);
-legend('MotEff Driver (%)', 'MotEff ACC (%)', 'MotEff ACC Mod(%)')
+legend('Driver ', 'ACC', 'ACC Mod')
+xlabel('Time (s)');
+ylabel('Motor Efficiency (%)');
 
 %Plot trace regions
 figure(2);
@@ -248,6 +255,20 @@ clabel(C,h);
 [C, h] = contour(MotGenEffSpd_RPM, -1.*MotGenEffTrq_Nm, MotGenEff_Pct');
 clabel(C,h);
 colorbar
+xlabel('Motor Speed (RPM)');
+ylabel('Motor Torque (Nm)');
+
+%Plot ACC Optimization
+figure(3)
+x = (1:Kp)*Kp_step;
+[C, h] = contourf(x, 1:CarL, AveMotEffACC');
+clabel(C,h);
+xlabel('ACC Kp');
+ylabel('Car Length Gap');
+c = colorbar;
+c.Label.String = 'Average Motor Efficiency (%)';
+% xlim([0 0.02])
+
 
 BattConsp_WhPMi
 AveMotEff
